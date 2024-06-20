@@ -35,7 +35,9 @@ function Page() {
     e.preventDefault();
 
     if (!videoFile || !thumbnailFile) {
-      setUploadStatus("Por favor selecciona tanto un video como una miniatura.");
+      setUploadStatus(
+        "Por favor selecciona tanto un video como una miniatura."
+      );
       return;
     }
 
@@ -49,19 +51,20 @@ function Page() {
     formData.append("description", videoDescription);
 
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch("http://localhost:3000/api/uploadVideo", {
         method: "POST",
         body: formData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        setUploadStatus(`Video subido con éxito: ${data.files.videoFile[0].filename}`);
+        setUploadStatus(`Video subido con éxito: ${data.message}`);
       } else {
         const errorData = await response.json();
-        setUploadStatus(`Error al subir el video: ${errorData.message}`);
+        setUploadStatus(`Error al subir el video: ${errorData.error}`);
       }
     } catch (error) {
+      console.log(response);
       console.error("Error:", error);
       setUploadStatus("Error al subir el video.");
     }
